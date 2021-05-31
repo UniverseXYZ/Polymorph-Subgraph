@@ -1,0 +1,17 @@
+type TokenMorphedEntity @entity {
+  id: ID!
+  tokenId: BigInt!
+  oldGene: BigInt!
+  newGene: BigInt!
+}
+
+type TransferEntity @entity {
+  id: ID!
+  from: Bytes!
+  to: Bytes!
+  tokenId: BigInt!
+  tokenURI: String!
+  description: String!
+  name: String!
+  image: String!
+}

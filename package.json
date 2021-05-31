@@ -1,0 +1,18 @@
+{
+  "name": "polymorph",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ AndonMitev/polymorph --access-token 7fcd0d0e0b784e859fbf1abd3cb3bc41",
+    "create-local": "graph create --node http://localhost:8020/ AndonMitev/polymorph",
+    "remove-local": "graph remove --node http://localhost:8020/ AndonMitev/polymorph",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 AndonMitev/polymorph"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.20.0",
+    "@graphprotocol/graph-ts": "^0.20.0",
+    "@types/node-fetch": "^2.5.10",
+    "node-fetch": "^2.6.1"
+  }
+}
