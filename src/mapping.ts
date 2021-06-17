@@ -38,6 +38,8 @@ export function handleTokenMorphed(event: TokenMorphed): void {
   tokenMorphed.tokenId = event.params.tokenId;
   tokenMorphed.oldGene = event.params.oldGene;
   tokenMorphed.newGene = event.params.newGene;
+  tokenMorphed.priceForGenomeChange = event.params.price;
+  tokenMorphed.eventType = event.params.eventType;
 
   tokenMorphed.save();
 }
