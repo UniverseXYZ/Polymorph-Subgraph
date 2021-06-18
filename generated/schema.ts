@@ -69,13 +69,13 @@ export class TokenMorphedEntity extends Entity {
     this.set("newGene", Value.fromBigInt(value));
   }
 
-  get priceForGenomeChange(): BigInt {
-    let value = this.get("priceForGenomeChange");
+  get price(): BigInt {
+    let value = this.get("price");
     return value.toBigInt();
   }
 
-  set priceForGenomeChange(value: BigInt) {
-    this.set("priceForGenomeChange", Value.fromBigInt(value));
+  set price(value: BigInt) {
+    this.set("price", Value.fromBigInt(value));
   }
 
   get eventType(): i32 {
@@ -125,6 +125,64 @@ export class TransferEntity extends Entity {
 
   set from(value: Bytes) {
     this.set("from", Value.fromBytes(value));
+  }
+
+  get to(): Bytes {
+    let value = this.get("to");
+    return value.toBytes();
+  }
+
+  set to(value: Bytes) {
+    this.set("to", Value.fromBytes(value));
+  }
+
+  get tokenId(): BigInt {
+    let value = this.get("tokenId");
+    return value.toBigInt();
+  }
+
+  set tokenId(value: BigInt) {
+    this.set("tokenId", Value.fromBigInt(value));
+  }
+
+  get tokenURI(): string {
+    let value = this.get("tokenURI");
+    return value.toString();
+  }
+
+  set tokenURI(value: string) {
+    this.set("tokenURI", Value.fromString(value));
+  }
+}
+
+export class MintedEntity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save MintedEntity entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save MintedEntity entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("MintedEntity", id.toString(), this);
+  }
+
+  static load(id: string): MintedEntity | null {
+    return store.get("MintedEntity", id) as MintedEntity | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get to(): Bytes {

@@ -10,7 +10,8 @@ import {
   SlopeChanged,
   TokenMorphed,
   Transfer,
-  Unpaused
+  Unpaused,
+  TokenMinted
 } from "../generated/Contract/Contract"
 import { TokenMorphedEntity, TransferEntity } from "../generated/schema"
 
@@ -30,7 +31,7 @@ export function handleRoleGranted(event: RoleGranted): void {}
 
 export function handleRoleRevoked(event: RoleRevoked): void {}
 
-export function handleSlopeChanged(event: SlopeChanged): void {}
+export function handleTokenMinted(event: TokenMinted): void {}
 
 export function handleTokenMorphed(event: TokenMorphed): void {
   let tokenMorphed = new TokenMorphedEntity(event.params.tokenId.toHex());
@@ -38,7 +39,7 @@ export function handleTokenMorphed(event: TokenMorphed): void {
   tokenMorphed.tokenId = event.params.tokenId;
   tokenMorphed.oldGene = event.params.oldGene;
   tokenMorphed.newGene = event.params.newGene;
-  tokenMorphed.priceForGenomeChange = event.params.price;
+  tokenMorphed.price = event.params.price;
   tokenMorphed.eventType = event.params.eventType;
 
   tokenMorphed.save();

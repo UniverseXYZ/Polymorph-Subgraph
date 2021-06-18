@@ -3,13 +3,20 @@ type TokenMorphedEntity @entity {
   tokenId: BigInt!
   oldGene: BigInt!
   newGene: BigInt!
-  priceForGenomeChange: BigInt!
+  price: BigInt!
   eventType: Int!
 }
 
 type TransferEntity @entity {
   id: ID!
   from: Bytes!
+  to: Bytes!
+  tokenId: BigInt!
+  tokenURI: String!
+}
+
+type MintedEntity @entity {
+  id: ID!
   to: Bytes!
   tokenId: BigInt!
   tokenURI: String!
