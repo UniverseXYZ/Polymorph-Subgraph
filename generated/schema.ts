@@ -86,6 +86,15 @@ export class TokenMorphedEntity extends Entity {
   set eventType(value: i32) {
     this.set("eventType", Value.fromI32(value));
   }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
 }
 
 export class TransferEntity extends Entity {

@@ -5,6 +5,7 @@ type TokenMorphedEntity @entity {
   newGene: BigInt!
   price: BigInt!
   eventType: Int!
+  timestamp: BigInt!
 }
 
 type TransferEntity @entity {

@@ -41,6 +41,7 @@ export function handleTokenMorphed(event: TokenMorphed): void {
   tokenMorphed.newGene = event.params.newGene;
   tokenMorphed.price = event.params.price;
   tokenMorphed.eventType = event.params.eventType;
+  tokenMorphed.timestamp = event.block.timestamp;
 
   tokenMorphed.save();
 }
