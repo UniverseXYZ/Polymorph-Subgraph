@@ -7,7 +7,6 @@ import {
   RoleAdminChanged,
   RoleGranted,
   RoleRevoked,
-  SlopeChanged,
   TokenMorphed,
   Transfer,
   Unpaused,

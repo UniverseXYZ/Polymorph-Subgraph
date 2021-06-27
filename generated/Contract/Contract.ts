@@ -80,6 +80,60 @@ export class BaseGenomeChangePriceChanged__Params {
   }
 }
 
+export class BaseURIChanged extends ethereum.Event {
+  get params(): BaseURIChanged__Params {
+    return new BaseURIChanged__Params(this);
+  }
+}
+
+export class BaseURIChanged__Params {
+  _event: BaseURIChanged;
+
+  constructor(event: BaseURIChanged) {
+    this._event = event;
+  }
+
+  get baseURI(): string {
+    return this._event.parameters[0].value.toString();
+  }
+}
+
+export class BulkBuyLimitChanged extends ethereum.Event {
+  get params(): BulkBuyLimitChanged__Params {
+    return new BulkBuyLimitChanged__Params(this);
+  }
+}
+
+export class BulkBuyLimitChanged__Params {
+  _event: BulkBuyLimitChanged;
+
+  constructor(event: BulkBuyLimitChanged) {
+    this._event = event;
+  }
+
+  get newBulkBuyLimit(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
+export class MaxSupplyChanged extends ethereum.Event {
+  get params(): MaxSupplyChanged__Params {
+    return new MaxSupplyChanged__Params(this);
+  }
+}
+
+export class MaxSupplyChanged__Params {
+  _event: MaxSupplyChanged;
+
+  constructor(event: MaxSupplyChanged) {
+    this._event = event;
+  }
+
+  get newMaxSupply(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
 export class Paused extends ethereum.Event {
   get params(): Paused__Params {
     return new Paused__Params(this);
@@ -95,6 +149,24 @@ export class Paused__Params {
 
   get account(): Address {
     return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class PolymorphPriceChanged extends ethereum.Event {
+  get params(): PolymorphPriceChanged__Params {
+    return new PolymorphPriceChanged__Params(this);
+  }
+}
+
+export class PolymorphPriceChanged__Params {
+  _event: PolymorphPriceChanged;
+
+  constructor(event: PolymorphPriceChanged) {
+    this._event = event;
+  }
+
+  get newPolymorphPrice(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
   }
 }
 
@@ -191,24 +263,6 @@ export class RoleRevoked__Params {
 
   get sender(): Address {
     return this._event.parameters[2].value.toAddress();
-  }
-}
-
-export class SlopeChanged extends ethereum.Event {
-  get params(): SlopeChanged__Params {
-    return new SlopeChanged__Params(this);
-  }
-}
-
-export class SlopeChanged__Params {
-  _event: SlopeChanged;
-
-  constructor(event: SlopeChanged) {
-    this._event = event;
-  }
-
-  get newSlope(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
   }
 }
 
@@ -312,6 +366,24 @@ export class Unpaused__Params {
   }
 }
 
+export class arweaveAssetsJSONChanged extends ethereum.Event {
+  get params(): arweaveAssetsJSONChanged__Params {
+    return new arweaveAssetsJSONChanged__Params(this);
+  }
+}
+
+export class arweaveAssetsJSONChanged__Params {
+  _event: arweaveAssetsJSONChanged;
+
+  constructor(event: arweaveAssetsJSONChanged) {
+    this._event = event;
+  }
+
+  get arweaveAssetsJSON(): string {
+    return this._event.parameters[0].value.toString();
+  }
+}
+
 export class Contract extends ethereum.SmartContract {
   static bind(address: Address): Contract {
     return new Contract("Contract", address);
@@ -368,6 +440,29 @@ export class Contract extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
+  arweaveAssetsJSON(): string {
+    let result = super.call(
+      "arweaveAssetsJSON",
+      "arweaveAssetsJSON():(string)",
+      []
+    );
+
+    return result[0].toString();
+  }
+
+  try_arweaveAssetsJSON(): ethereum.CallResult<string> {
+    let result = super.tryCall(
+      "arweaveAssetsJSON",
+      "arweaveAssetsJSON():(string)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
   }
 
   balanceOf(owner: Address): BigInt {
@@ -632,6 +727,21 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  maxSupply(): BigInt {
+    let result = super.call("maxSupply", "maxSupply():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_maxSupply(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("maxSupply", "maxSupply():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   name(): string {
     let result = super.call("name", "name():(string)", []);
 
@@ -692,6 +802,29 @@ export class Contract extends ethereum.SmartContract {
       "polymorphPrice",
       "polymorphPrice():(uint256)",
       []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  priceForGenomeChange(tokenId: BigInt): BigInt {
+    let result = super.call(
+      "priceForGenomeChange",
+      "priceForGenomeChange(uint256):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_priceForGenomeChange(tokenId: BigInt): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "priceForGenomeChange",
+      "priceForGenomeChange(uint256):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -847,29 +980,6 @@ export class Contract extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
-
-  priceForGenomeChange(tokenId: BigInt): BigInt {
-    let result = super.call(
-      "priceForGenomeChange",
-      "priceForGenomeChange(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_priceForGenomeChange(tokenId: BigInt): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "priceForGenomeChange",
-      "priceForGenomeChange(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
 }
 
 export class ConstructorCall extends ethereum.Call {
@@ -927,6 +1037,10 @@ export class ConstructorCall__Inputs {
 
   get _bulkBuyLimit(): BigInt {
     return this._call.inputValues[9].value.toBigInt();
+  }
+
+  get _arweaveAssetsJSON(): string {
+    return this._call.inputValues[10].value.toString();
   }
 }
 
@@ -1032,6 +1146,66 @@ export class BurnCall__Outputs {
   }
 }
 
+export class ChangeBaseGenomeChangePriceCall extends ethereum.Call {
+  get inputs(): ChangeBaseGenomeChangePriceCall__Inputs {
+    return new ChangeBaseGenomeChangePriceCall__Inputs(this);
+  }
+
+  get outputs(): ChangeBaseGenomeChangePriceCall__Outputs {
+    return new ChangeBaseGenomeChangePriceCall__Outputs(this);
+  }
+}
+
+export class ChangeBaseGenomeChangePriceCall__Inputs {
+  _call: ChangeBaseGenomeChangePriceCall;
+
+  constructor(call: ChangeBaseGenomeChangePriceCall) {
+    this._call = call;
+  }
+
+  get newGenomeChangePrice(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class ChangeBaseGenomeChangePriceCall__Outputs {
+  _call: ChangeBaseGenomeChangePriceCall;
+
+  constructor(call: ChangeBaseGenomeChangePriceCall) {
+    this._call = call;
+  }
+}
+
+export class ChangeRandomizeGenomePriceCall extends ethereum.Call {
+  get inputs(): ChangeRandomizeGenomePriceCall__Inputs {
+    return new ChangeRandomizeGenomePriceCall__Inputs(this);
+  }
+
+  get outputs(): ChangeRandomizeGenomePriceCall__Outputs {
+    return new ChangeRandomizeGenomePriceCall__Outputs(this);
+  }
+}
+
+export class ChangeRandomizeGenomePriceCall__Inputs {
+  _call: ChangeRandomizeGenomePriceCall;
+
+  constructor(call: ChangeRandomizeGenomePriceCall) {
+    this._call = call;
+  }
+
+  get newRandomizeGenomePrice(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class ChangeRandomizeGenomePriceCall__Outputs {
+  _call: ChangeRandomizeGenomePriceCall;
+
+  constructor(call: ChangeRandomizeGenomePriceCall) {
+    this._call = call;
+  }
+}
+
 export class GrantRoleCall extends ethereum.Call {
   get inputs(): GrantRoleCall__Inputs {
     return new GrantRoleCall__Inputs(this);
@@ -1122,6 +1296,40 @@ export class Mint1Call__Outputs {
   }
 }
 
+export class MorphGeneCall extends ethereum.Call {
+  get inputs(): MorphGeneCall__Inputs {
+    return new MorphGeneCall__Inputs(this);
+  }
+
+  get outputs(): MorphGeneCall__Outputs {
+    return new MorphGeneCall__Outputs(this);
+  }
+}
+
+export class MorphGeneCall__Inputs {
+  _call: MorphGeneCall;
+
+  constructor(call: MorphGeneCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get genePosition(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class MorphGeneCall__Outputs {
+  _call: MorphGeneCall;
+
+  constructor(call: MorphGeneCall) {
+    this._call = call;
+  }
+}
+
 export class PauseCall extends ethereum.Call {
   get inputs(): PauseCall__Inputs {
     return new PauseCall__Inputs(this);
@@ -1144,6 +1352,36 @@ export class PauseCall__Outputs {
   _call: PauseCall;
 
   constructor(call: PauseCall) {
+    this._call = call;
+  }
+}
+
+export class RandomizeGenomeCall extends ethereum.Call {
+  get inputs(): RandomizeGenomeCall__Inputs {
+    return new RandomizeGenomeCall__Inputs(this);
+  }
+
+  get outputs(): RandomizeGenomeCall__Outputs {
+    return new RandomizeGenomeCall__Outputs(this);
+  }
+}
+
+export class RandomizeGenomeCall__Inputs {
+  _call: RandomizeGenomeCall;
+
+  constructor(call: RandomizeGenomeCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class RandomizeGenomeCall__Outputs {
+  _call: RandomizeGenomeCall;
+
+  constructor(call: RandomizeGenomeCall) {
     this._call = call;
   }
 }
@@ -1330,6 +1568,66 @@ export class SetApprovalForAllCall__Outputs {
   }
 }
 
+export class SetArweaveAssetsJSONCall extends ethereum.Call {
+  get inputs(): SetArweaveAssetsJSONCall__Inputs {
+    return new SetArweaveAssetsJSONCall__Inputs(this);
+  }
+
+  get outputs(): SetArweaveAssetsJSONCall__Outputs {
+    return new SetArweaveAssetsJSONCall__Outputs(this);
+  }
+}
+
+export class SetArweaveAssetsJSONCall__Inputs {
+  _call: SetArweaveAssetsJSONCall;
+
+  constructor(call: SetArweaveAssetsJSONCall) {
+    this._call = call;
+  }
+
+  get _arweaveAssetsJSON(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+}
+
+export class SetArweaveAssetsJSONCall__Outputs {
+  _call: SetArweaveAssetsJSONCall;
+
+  constructor(call: SetArweaveAssetsJSONCall) {
+    this._call = call;
+  }
+}
+
+export class SetBaseURICall extends ethereum.Call {
+  get inputs(): SetBaseURICall__Inputs {
+    return new SetBaseURICall__Inputs(this);
+  }
+
+  get outputs(): SetBaseURICall__Outputs {
+    return new SetBaseURICall__Outputs(this);
+  }
+}
+
+export class SetBaseURICall__Inputs {
+  _call: SetBaseURICall;
+
+  constructor(call: SetBaseURICall) {
+    this._call = call;
+  }
+
+  get _baseURI(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+}
+
+export class SetBaseURICall__Outputs {
+  _call: SetBaseURICall;
+
+  constructor(call: SetBaseURICall) {
+    this._call = call;
+  }
+}
+
 export class SetBulkBuyLimitCall extends ethereum.Call {
   get inputs(): SetBulkBuyLimitCall__Inputs {
     return new SetBulkBuyLimitCall__Inputs(this);
@@ -1360,6 +1658,36 @@ export class SetBulkBuyLimitCall__Outputs {
   }
 }
 
+export class SetMaxSupplyCall extends ethereum.Call {
+  get inputs(): SetMaxSupplyCall__Inputs {
+    return new SetMaxSupplyCall__Inputs(this);
+  }
+
+  get outputs(): SetMaxSupplyCall__Outputs {
+    return new SetMaxSupplyCall__Outputs(this);
+  }
+}
+
+export class SetMaxSupplyCall__Inputs {
+  _call: SetMaxSupplyCall;
+
+  constructor(call: SetMaxSupplyCall) {
+    this._call = call;
+  }
+
+  get _maxSupply(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class SetMaxSupplyCall__Outputs {
+  _call: SetMaxSupplyCall;
+
+  constructor(call: SetMaxSupplyCall) {
+    this._call = call;
+  }
+}
+
 export class SetPolymorphPriceCall extends ethereum.Call {
   get inputs(): SetPolymorphPriceCall__Inputs {
     return new SetPolymorphPriceCall__Inputs(this);
@@ -1386,36 +1714,6 @@ export class SetPolymorphPriceCall__Outputs {
   _call: SetPolymorphPriceCall;
 
   constructor(call: SetPolymorphPriceCall) {
-    this._call = call;
-  }
-}
-
-export class SetTotalSupplyCall extends ethereum.Call {
-  get inputs(): SetTotalSupplyCall__Inputs {
-    return new SetTotalSupplyCall__Inputs(this);
-  }
-
-  get outputs(): SetTotalSupplyCall__Outputs {
-    return new SetTotalSupplyCall__Outputs(this);
-  }
-}
-
-export class SetTotalSupplyCall__Inputs {
-  _call: SetTotalSupplyCall;
-
-  constructor(call: SetTotalSupplyCall) {
-    this._call = call;
-  }
-
-  get totalSupply(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class SetTotalSupplyCall__Outputs {
-  _call: SetTotalSupplyCall;
-
-  constructor(call: SetTotalSupplyCall) {
     this._call = call;
   }
 }
@@ -1480,130 +1778,6 @@ export class UnpauseCall__Outputs {
   _call: UnpauseCall;
 
   constructor(call: UnpauseCall) {
-    this._call = call;
-  }
-}
-
-export class ChangeBaseGenomeChangePriceCall extends ethereum.Call {
-  get inputs(): ChangeBaseGenomeChangePriceCall__Inputs {
-    return new ChangeBaseGenomeChangePriceCall__Inputs(this);
-  }
-
-  get outputs(): ChangeBaseGenomeChangePriceCall__Outputs {
-    return new ChangeBaseGenomeChangePriceCall__Outputs(this);
-  }
-}
-
-export class ChangeBaseGenomeChangePriceCall__Inputs {
-  _call: ChangeBaseGenomeChangePriceCall;
-
-  constructor(call: ChangeBaseGenomeChangePriceCall) {
-    this._call = call;
-  }
-
-  get newGenomeChangePrice(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class ChangeBaseGenomeChangePriceCall__Outputs {
-  _call: ChangeBaseGenomeChangePriceCall;
-
-  constructor(call: ChangeBaseGenomeChangePriceCall) {
-    this._call = call;
-  }
-}
-
-export class ChangeRandomizeGenomePriceCall extends ethereum.Call {
-  get inputs(): ChangeRandomizeGenomePriceCall__Inputs {
-    return new ChangeRandomizeGenomePriceCall__Inputs(this);
-  }
-
-  get outputs(): ChangeRandomizeGenomePriceCall__Outputs {
-    return new ChangeRandomizeGenomePriceCall__Outputs(this);
-  }
-}
-
-export class ChangeRandomizeGenomePriceCall__Inputs {
-  _call: ChangeRandomizeGenomePriceCall;
-
-  constructor(call: ChangeRandomizeGenomePriceCall) {
-    this._call = call;
-  }
-
-  get newRandomizeGenomePrice(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class ChangeRandomizeGenomePriceCall__Outputs {
-  _call: ChangeRandomizeGenomePriceCall;
-
-  constructor(call: ChangeRandomizeGenomePriceCall) {
-    this._call = call;
-  }
-}
-
-export class MorphGeneCall extends ethereum.Call {
-  get inputs(): MorphGeneCall__Inputs {
-    return new MorphGeneCall__Inputs(this);
-  }
-
-  get outputs(): MorphGeneCall__Outputs {
-    return new MorphGeneCall__Outputs(this);
-  }
-}
-
-export class MorphGeneCall__Inputs {
-  _call: MorphGeneCall;
-
-  constructor(call: MorphGeneCall) {
-    this._call = call;
-  }
-
-  get tokenId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get genePosition(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class MorphGeneCall__Outputs {
-  _call: MorphGeneCall;
-
-  constructor(call: MorphGeneCall) {
-    this._call = call;
-  }
-}
-
-export class RandomizeGenomeCall extends ethereum.Call {
-  get inputs(): RandomizeGenomeCall__Inputs {
-    return new RandomizeGenomeCall__Inputs(this);
-  }
-
-  get outputs(): RandomizeGenomeCall__Outputs {
-    return new RandomizeGenomeCall__Outputs(this);
-  }
-}
-
-export class RandomizeGenomeCall__Inputs {
-  _call: RandomizeGenomeCall;
-
-  constructor(call: RandomizeGenomeCall) {
-    this._call = call;
-  }
-
-  get tokenId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class RandomizeGenomeCall__Outputs {
-  _call: RandomizeGenomeCall;
-
-  constructor(call: RandomizeGenomeCall) {
     this._call = call;
   }
 }
