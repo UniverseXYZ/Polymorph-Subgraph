@@ -4,10 +4,10 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ strenev/polymorph --access-token af0d356e96bd4ec4bdeb8a8eb9ac3a58",
-    "create-local": "graph create --node http://localhost:8020/ strenev/polymorph",
-    "remove-local": "graph remove --node http://localhost:8020/ strenev/polymorph",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 strenev/polymorph"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ strenev/polymorphs --access-token af0d356e96bd4ec4bdeb8a8eb9ac3a58",
+    "create-local": "graph create --node http://localhost:8020/ strenev/polymorphs",
+    "remove-local": "graph remove --node http://localhost:8020/ strenev/polymorphs",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 strenev/polymorphs"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.20.0",
