@@ -52,6 +52,7 @@ export function handleTransfer(event: Transfer): void {
   transfer.from = event.params.from;
   transfer.to = event.params.to;
   transfer.tokenId = event.params.tokenId;
+  transfer.gene = contract.geneOf(transfer.tokenId);
 
   let tokenURI = contract.tokenURI(transfer.tokenId);
 
