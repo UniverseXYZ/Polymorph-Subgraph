@@ -95,6 +95,24 @@ export class TokenMorphedEntity extends Entity {
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
   }
+
+  get priceForGenomeChange(): BigInt {
+    let value = this.get("priceForGenomeChange");
+    return value.toBigInt();
+  }
+
+  set priceForGenomeChange(value: BigInt) {
+    this.set("priceForGenomeChange", Value.fromBigInt(value));
+  }
+
+  get gene(): BigInt {
+    let value = this.get("gene");
+    return value.toBigInt();
+  }
+
+  set gene(value: BigInt) {
+    this.set("gene", Value.fromBigInt(value));
+  }
 }
 
 export class TransferEntity extends Entity {
@@ -161,24 +179,6 @@ export class TransferEntity extends Entity {
 
   set tokenURI(value: string) {
     this.set("tokenURI", Value.fromString(value));
-  }
-
-  get gene(): BigInt {
-    let value = this.get("gene");
-    return value.toBigInt();
-  }
-
-  set gene(value: BigInt) {
-    this.set("gene", Value.fromBigInt(value));
-  }
-
-  get priceForGenomeChange(): BigInt {
-    let value = this.get("priceForGenomeChange");
-    return value.toBigInt();
-  }
-
-  set priceForGenomeChange(value: BigInt) {
-    this.set("priceForGenomeChange", Value.fromBigInt(value));
   }
 }
 

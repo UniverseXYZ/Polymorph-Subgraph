@@ -34,6 +34,7 @@ export function handleTokenMinted(event: TokenMinted): void {}
 
 export function handleTokenMorphed(event: TokenMorphed): void {
   let tokenMorphed = new TokenMorphedEntity(event.params.tokenId.toHex());
+  let contract = Contract.bind(event.address)
 
   tokenMorphed.tokenId = event.params.tokenId;
   tokenMorphed.oldGene = event.params.oldGene;
@@ -41,7 +42,8 @@ export function handleTokenMorphed(event: TokenMorphed): void {
   tokenMorphed.price = event.params.price;
   tokenMorphed.eventType = event.params.eventType;
   tokenMorphed.timestamp = event.block.timestamp;
-
+  tokenMorphed.priceForGenomeChange = contract.priceForGenomeChange(tokenMorphed.tokenId);
+  tokenMorphed.gene = contract.geneOf(tokenMorphed.tokenId);
   tokenMorphed.save();
 }
 
@@ -52,8 +54,6 @@ export function handleTransfer(event: Transfer): void {
   transfer.from = event.params.from;
   transfer.to = event.params.to;
   transfer.tokenId = event.params.tokenId;
-  transfer.gene = contract.geneOf(transfer.tokenId);
-  transfer.priceForGenomeChange = contract.priceForGenomeChange(transfer.tokenId);
 
   let tokenURI = contract.tokenURI(transfer.tokenId);
 
