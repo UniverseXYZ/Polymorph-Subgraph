@@ -171,6 +171,15 @@ export class TransferEntity extends Entity {
   set gene(value: BigInt) {
     this.set("gene", Value.fromBigInt(value));
   }
+
+  get priceForGenomeChange(): BigInt {
+    let value = this.get("priceForGenomeChange");
+    return value.toBigInt();
+  }
+
+  set priceForGenomeChange(value: BigInt) {
+    this.set("priceForGenomeChange", Value.fromBigInt(value));
+  }
 }
 
 export class MintedEntity extends Entity {

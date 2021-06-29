@@ -15,6 +15,7 @@ type TransferEntity @entity {
   tokenId: BigInt!
   tokenURI: String!
   gene: BigInt!
+  priceForGenomeChange: BigInt!
 }
 
 type MintedEntity @entity {
