@@ -104,15 +104,6 @@ export class TokenMorphedEntity extends Entity {
   set priceForGenomeChange(value: BigInt) {
     this.set("priceForGenomeChange", Value.fromBigInt(value));
   }
-
-  get gene(): BigInt {
-    let value = this.get("gene");
-    return value.toBigInt();
-  }
-
-  set gene(value: BigInt) {
-    this.set("gene", Value.fromBigInt(value));
-  }
 }
 
 export class TransferEntity extends Entity {

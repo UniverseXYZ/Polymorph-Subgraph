@@ -33,18 +33,21 @@ export function handleRoleRevoked(event: RoleRevoked): void {}
 export function handleTokenMinted(event: TokenMinted): void {}
 
 export function handleTokenMorphed(event: TokenMorphed): void {
-  let tokenMorphed = new TokenMorphedEntity(event.params.tokenId.toHex());
+  let id = event.transaction.hash.toHex() + event.params.tokenId.toHex()
+  let tokenMorphed  = new TokenMorphedEntity(id);
+    
   let contract = Contract.bind(event.address)
-
-  tokenMorphed.tokenId = event.params.tokenId;
-  tokenMorphed.oldGene = event.params.oldGene;
-  tokenMorphed.newGene = event.params.newGene;
-  tokenMorphed.price = event.params.price;
-  tokenMorphed.eventType = event.params.eventType;
-  tokenMorphed.timestamp = event.block.timestamp;
-  tokenMorphed.priceForGenomeChange = contract.priceForGenomeChange(tokenMorphed.tokenId);
-  tokenMorphed.gene = contract.geneOf(tokenMorphed.tokenId);
-  tokenMorphed.save();
+    
+  tokenMorphed.tokenId = event.params.tokenId
+  tokenMorphed.oldGene = event.params.oldGene
+  tokenMorphed.newGene = contract.geneOf(tokenMorphed.tokenId)
+  tokenMorphed.price = event.params.price
+  tokenMorphed.eventType = event.params.eventType
+  tokenMorphed.timestamp = event.block.timestamp
+  tokenMorphed.priceForGenomeChange = contract.priceForGenomeChange(tokenMorphed.tokenId)
+      
+  tokenMorphed.save()
+  
 }
 
 export function handleTransfer(event: Transfer): void {

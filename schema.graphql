@@ -7,7 +7,6 @@ type TokenMorphedEntity @entity {
   eventType: Int!
   timestamp: BigInt!
   priceForGenomeChange: BigInt!
-  gene: BigInt!
 }
 
 type TransferEntity @entity {
