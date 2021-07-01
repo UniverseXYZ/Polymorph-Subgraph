@@ -1,4 +1,4 @@
-import { ByteArray, log, BigInt, Value, store } from '@graphprotocol/graph-ts'
+import { ByteArray, log, BigInt, Value, store, BigDecimal } from '@graphprotocol/graph-ts'
 import {
   Contract,
   Approval,
@@ -15,7 +15,7 @@ import {
 } from "../generated/Contract/Contract"
 import { TokenMorphedEntity, TransferEntity, Trait } from "../generated/schema"
 
-function parseGeneToTraits(gene: string): void {
+function parseGeneToTraits(gene: string, method: string): void {
   // CHARACTER MAP
   let charactersMap = new Map<i8, string>()
   charactersMap.set(0, "Diamond Paws")
@@ -306,6 +306,7 @@ function parseGeneToTraits(gene: string): void {
   let groupsLength = 9; // 18 / 2
   var groupedGenes = new Array<string>(groupsLength) // ["89", "88", "20", "59", "38", "45", "81", "70", "92"]
   let geneDelimeter = 2;
+  let totalCharacters = 10000;
 
   // Group the genes by pairs ["89", "88", "20", "59", "38", "45", "81", "70", "92"]
   for (let i: i32 = genesToArray.length - 1, j: i32 = 9 - 1; i >= 0; i-= geneDelimeter, j-=1) {
@@ -318,8 +319,8 @@ function parseGeneToTraits(gene: string): void {
     let geneType = geneTypesByIndex.get(i); // CHARACTER
     let geneItemsCount = itemsCountByType.get(geneType); // 11
     let geneNumber = groupedGenes[i]; // "98"
-    let intValue = parseInt(geneNumber) as i32;
-    let itemIndex = intValue % geneItemsCount; // 98 % 11 = 10
+    let geneIntValue = parseInt(geneNumber) as i32;
+    let itemIndex = geneIntValue % geneItemsCount; // 98 % 11 = 10
     let id = i.toString() + "_" + itemIndex.toString(); // 1_3
 
     let trait = Trait.load(id);
@@ -330,7 +331,22 @@ function parseGeneToTraits(gene: string): void {
 
     // log.debug('hello count before {}', [trait.count.toString()]);
 
-    trait.count = trait.count.plus(BigInt.fromI32(1));
+    if(method == 'increment') {
+      log.debug('hello increment', []);
+      trait.count = trait.count.plus(BigInt.fromI32(1));
+    } else {
+      log.debug('hello decrement', []);
+      trait.count = trait.count.minus(BigInt.fromI32(1));
+    }
+
+    let totalItems = parseFloat("10000") as f32;
+    let itemsCount = trait.count.toString();
+    let itemsCountF = parseFloat(itemsCount) as f32;
+    let rarity = (itemsCountF * 100)  / totalItems;
+    let rarityString = rarity.toString();
+
+    trait.rarity = BigDecimal.fromString(rarityString);
+    log.debug('hello trait {} ', [rarity.toString()]);
     trait.save();
   }
 }
@@ -352,16 +368,20 @@ export function handleRoleGranted(event: RoleGranted): void {}
 export function handleRoleRevoked(event: RoleRevoked): void {}
 
 export function handleTokenMinted(event: TokenMinted): void {
+  log.debug('hello handleTokenMinted', []);
+
   let gene = event.params.newGene.toString();
-  parseGeneToTraits(gene);
+  parseGeneToTraits(gene, 'increment');
 }
 
 export function handleTokenMorphed(event: TokenMorphed): void {
+  log.debug('hello handleTokenMorphed', []);
+
   let id = event.transaction.hash.toHex() + event.params.tokenId.toHex()
   let tokenMorphed  = new TokenMorphedEntity(id);
-    
+
   let contract = Contract.bind(event.address)
-    
+
   tokenMorphed.tokenId = event.params.tokenId
   tokenMorphed.oldGene = event.params.oldGene
   tokenMorphed.newGene = contract.geneOf(tokenMorphed.tokenId)
@@ -369,9 +389,22 @@ export function handleTokenMorphed(event: TokenMorphed): void {
   tokenMorphed.eventType = event.params.eventType
   tokenMorphed.timestamp = event.block.timestamp
   tokenMorphed.priceForGenomeChange = contract.priceForGenomeChange(tokenMorphed.tokenId)
-      
+
   tokenMorphed.save()
-  
+
+  let oldGene = event.params.oldGene.toString();
+  let newGene = contract.geneOf(tokenMorphed.tokenId);
+  let newGeneString = newGene.toString();
+
+  log.debug('hello oldGene newGene out {} {}', [oldGene, newGeneString]);
+
+  if (!oldGene.endsWith(newGeneString)) {
+    if (oldGene != "0") {
+      log.debug('hello oldGene newGene {} {}', [oldGene, newGeneString]);
+      parseGeneToTraits(oldGene, 'decrement');
+      parseGeneToTraits(newGeneString, 'increment');
+    }
+  }
 }
 
 export function handleTransfer(event: Transfer): void {

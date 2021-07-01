@@ -277,4 +277,21 @@ export class Trait extends Entity {
       this.set("count", Value.fromBigInt(value as BigInt));
     }
   }
+
+  get rarity(): BigDecimal | null {
+    let value = this.get("rarity");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set rarity(value: BigDecimal | null) {
+    if (value === null) {
+      this.unset("rarity");
+    } else {
+      this.set("rarity", Value.fromBigDecimal(value as BigDecimal));
+    }
+  }
 }
