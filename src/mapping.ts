@@ -291,7 +291,7 @@ function parseGeneToTraits(gene: string, method: string): void {
 
   let itemsCountByType= new Map<string, i32>();
   itemsCountByType.set("CHARACTER", 11)
-  itemsCountByType.set("BACKGROUND", 11)
+  itemsCountByType.set("BACKGROUND", 12)
   itemsCountByType.set("PANTS",  33)
   itemsCountByType.set("TORSO", 34)
   itemsCountByType.set("FOOTWEAR",25)
