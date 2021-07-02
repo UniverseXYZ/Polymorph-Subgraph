@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Contract
-    network: ropsten
+    network: mainnet
     source:
-      address: "0x094e0c66bEc52a737e580fbba50ECb66a4CF74B2"
+      address: "0x1cBB182322Aee8ce9F4F1f98d7460173ee30Af1F"
       abi: Contract
-      startBlock: 10456566
+      startBlock: 12716655
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -26,6 +26,7 @@ dataSources:
         - TokenMinted
         - Transfer
         - Unpaused
+        - Trait
       abis:
         - name: Contract
           file: ./abis/Contract.json

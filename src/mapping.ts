@@ -264,7 +264,6 @@ function parseGeneToTraits(gene: string, method: string): void {
   backgroundMap.set(9, "Squeaky Clean")
   backgroundMap.set(10, "Strong Bliss")
   backgroundMap.set(11, "Summer Salad")
-  backgroundMap.set(12, "Winter Solstice")
 
   // GENE POSITIONS MAP
   let genePositionsMap = new Map<string, i32>()
@@ -292,7 +291,7 @@ function parseGeneToTraits(gene: string, method: string): void {
 
   let itemsCountByType= new Map<string, i32>();
   itemsCountByType.set("CHARACTER", 11)
-  itemsCountByType.set("BACKGROUND", 12)
+  itemsCountByType.set("BACKGROUND", 11)
   itemsCountByType.set("PANTS",  33)
   itemsCountByType.set("TORSO", 34)
   itemsCountByType.set("FOOTWEAR",25)
@@ -303,10 +302,9 @@ function parseGeneToTraits(gene: string, method: string): void {
 
   let adjustableGenes = gene.substring(gene.length - 18); // take the last 18 digits
   let genesToArray = adjustableGenes.split('');
-  let groupsLength = 9; // 18 / 2
+  let groupsLength = 9; // 18 / 2 -> We have 18 digits representing the genes, they shoud be grouped by 2 digits
   var groupedGenes = new Array<string>(groupsLength) // ["89", "88", "20", "59", "38", "45", "81", "70", "92"]
   let geneDelimeter = 2;
-  let totalCharacters = 10000;
 
   // Group the genes by pairs ["89", "88", "20", "59", "38", "45", "81", "70", "92"]
   for (let i: i32 = genesToArray.length - 1, j: i32 = 9 - 1; i >= 0; i-= geneDelimeter, j-=1) {
@@ -314,14 +312,15 @@ function parseGeneToTraits(gene: string, method: string): void {
     groupedGenes[j] = genom;
   };
 
-
   for (let i: i32 = 0; i <= groupsLength - 1; i+= 1) {
     let geneType = geneTypesByIndex.get(i); // CHARACTER
     let geneItemsCount = itemsCountByType.get(geneType); // 11
     let geneNumber = groupedGenes[i]; // "98"
     let geneIntValue = parseInt(geneNumber) as i32;
     let itemIndex = geneIntValue % geneItemsCount; // 98 % 11 = 10
-    let id = i.toString() + "_" + itemIndex.toString(); // 1_3
+    // THERE IS A LIMITATION ON FRONT END SIDE WE CANNOT SEND QUERYES WITH ID STARTING WITH '00' OR '0-1' so we must use prefix
+    let prefix = "99";
+    let id = prefix + i.toString() + itemIndex.toString(); // 9913 -> 1 is geneTypesByIndex.get(1) CHARACTER, 3 is itemIndex in that group "Glenn"
 
     let trait = Trait.load(id);
 
@@ -329,13 +328,11 @@ function parseGeneToTraits(gene: string, method: string): void {
       trait = new Trait(id);
     }
 
-    // log.debug('hello count before {}', [trait.count.toString()]);
-
     if(method == 'increment') {
-      log.debug('hello increment', []);
+      log.debug('DEBUG INFO:: GENE with ID {} is changing (inc) !', [id]); // When updating an Gene
       trait.count = trait.count.plus(BigInt.fromI32(1));
     } else {
-      log.debug('hello decrement', []);
+      log.debug('DEBUG INFO:: GENE with ID {} is changing (dec) !', [id]); // Before updating the Graph with the new Gene info we need to substract the previous Gene info
       trait.count = trait.count.minus(BigInt.fromI32(1));
     }
 
@@ -346,7 +343,7 @@ function parseGeneToTraits(gene: string, method: string): void {
     let rarityString = rarity.toString();
 
     trait.rarity = BigDecimal.fromString(rarityString);
-    log.debug('hello trait {} ', [rarity.toString()]);
+    log.debug('DEBUG INFO:: GENE with ID {} rarity is changing to {} !', [id, rarity.toString()]);
     trait.save();
   }
 }
@@ -368,14 +365,14 @@ export function handleRoleGranted(event: RoleGranted): void {}
 export function handleRoleRevoked(event: RoleRevoked): void {}
 
 export function handleTokenMinted(event: TokenMinted): void {
-  log.debug('hello handleTokenMinted', []);
+  log.debug('DEBUG INFO:: entering handleTokenMinted event !', []);
 
   let gene = event.params.newGene.toString();
   parseGeneToTraits(gene, 'increment');
 }
 
 export function handleTokenMorphed(event: TokenMorphed): void {
-  log.debug('hello handleTokenMorphed', []);
+  log.debug('DEBUG INFO:: entering handleTokenMorphed event !', []);
 
   let id = event.transaction.hash.toHex() + event.params.tokenId.toHex()
   let tokenMorphed  = new TokenMorphedEntity(id);
@@ -396,11 +393,9 @@ export function handleTokenMorphed(event: TokenMorphed): void {
   let newGene = contract.geneOf(tokenMorphed.tokenId);
   let newGeneString = newGene.toString();
 
-  log.debug('hello oldGene newGene out {} {}', [oldGene, newGeneString]);
-
   if (!oldGene.endsWith(newGeneString)) {
     if (oldGene != "0") {
-      log.debug('hello oldGene newGene {} {}', [oldGene, newGeneString]);
+      log.debug('DEBUG INFO::  GENE has been changed OLD GENE is:  {} NEW GENE is: {}', [oldGene, newGeneString]);
       parseGeneToTraits(oldGene, 'decrement');
       parseGeneToTraits(newGeneString, 'increment');
     }

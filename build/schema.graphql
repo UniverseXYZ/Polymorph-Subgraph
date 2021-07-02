@@ -27,4 +27,5 @@ type MintedEntity @entity {
 type Trait @entity {
   id: ID!
   count: BigInt
+  rarity: BigDecimal
 }
