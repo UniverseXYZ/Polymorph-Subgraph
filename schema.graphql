@@ -23,3 +23,9 @@ type MintedEntity @entity {
   tokenId: BigInt!
   tokenURI: String!
 }
+
+type Trait @entity {
+  id: ID!
+  count: BigInt
+  rarity: BigDecimal
+}

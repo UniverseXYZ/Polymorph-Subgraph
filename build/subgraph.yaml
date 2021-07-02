@@ -26,6 +26,7 @@ dataSources:
         - TokenMinted
         - Transfer
         - Unpaused
+        - Trait
       abis:
         - name: Contract
           file: Contract/abis/Contract.json
