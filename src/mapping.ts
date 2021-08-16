@@ -4,6 +4,7 @@ import {
   Approval,
   ApprovalForAll,
   BaseGenomeChangePriceChanged,
+  RandomizeGenomePriceChanged,
   Paused,
   RoleAdminChanged,
   RoleGranted,
@@ -354,6 +355,10 @@ export function handleApprovalForAll(event: ApprovalForAll): void {}
 
 export function handleBaseGenomeChangePriceChanged(
   event: BaseGenomeChangePriceChanged
+): void {}
+
+export function handleRandomizeGenomePriceChanged(
+  event: RandomizeGenomePriceChanged
 ): void {}
 
 export function handlePaused(event: Paused): void {}
