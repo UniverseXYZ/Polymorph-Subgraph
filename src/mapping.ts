@@ -415,10 +415,13 @@ export function handleTransfer(event: Transfer): void {
   transfer.to = event.params.to;
   transfer.tokenId = event.params.tokenId;
 
-  let tokenURI = contract.tokenURI(transfer.tokenId);
+  let tokenURI = contract.try_tokenURI(transfer.tokenId);
 
-  transfer.tokenURI = tokenURI;
-
+  if (tokenURI.reverted) {
+    log.info('getTokenURI reverted', []);
+  } else {
+    transfer.tokenURI = tokenURI.value
+  }
 
   transfer.save();
 }
