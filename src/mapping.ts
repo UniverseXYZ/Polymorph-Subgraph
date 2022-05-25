@@ -12,9 +12,10 @@ import {
   TokenMorphed,
   Transfer,
   Unpaused,
-  TokenMinted
+  TokenMinted,
+  TokenBurnedAndMinted
 } from "../generated/Contract/Contract"
-import { TokenMorphedEntity, TransferEntity, Trait } from "../generated/schema"
+import { TokenMorphedEntity, TransferEntity, Trait, BurnedEntity } from "../generated/schema"
 
 function parseGeneToTraits(gene: string, method: string): void {
   // CHARACTER MAP
@@ -424,6 +425,26 @@ export function handleTransfer(event: Transfer): void {
   }
 
   transfer.save();
+}
+
+export function handleTokenBurnedAndMinted(event: TokenBurnedAndMinted): void {
+  log.debug('DEBUG INFO:: entering handleTokenMinted event !', []);
+  let id = event.transaction.hash.toHex() + event.params.tokenId.toHex()
+  let burn = new BurnedEntity(id);
+  let contract = Contract.bind(event.address)
+
+  burn.tokenId = event.params.tokenId;
+  burn.gene = event.params.gene;
+
+  let tokenURI = contract.try_tokenURI(burn.tokenId);
+
+  if (tokenURI.reverted) {
+    log.info('getTokenURI reverted', []);
+  } else {
+    burn.tokenURI = tokenURI.value
+  }
+
+  burn.save();
 }
 
 export function handleUnpaused(event: Unpaused): void {}

@@ -2,59 +2,71 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "symbol",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "baseURI",
-        "type": "string"
-      },
-      {
-        "internalType": "address payable",
-        "name": "_daoAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "premintedTokensCount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_baseGenomeChangePrice",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_polymorphPrice",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "totalSupply",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_randomizeGenomePrice",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_bulkBuyLimit",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_arweaveAssetsJSON",
-        "type": "string"
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "baseURI",
+            "type": "string"
+          },
+          {
+            "internalType": "address payable",
+            "name": "_daoAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premintedTokensCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_baseGenomeChangePrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_polymorphPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_maxSupply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_randomizeGenomePrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_bulkBuyLimit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "_arweaveAssetsJSON",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "_polymorphV1Address",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct PolymorphRoot.Params",
+        "name": "params",
+        "type": "tuple"
       }
     ],
     "stateMutability": "nonpayable",
@@ -115,6 +127,19 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "string",
+        "name": "arweaveAssetsJSON",
+        "type": "string"
+      }
+    ],
+    "name": "ArweaveAssetsJSONChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "newGenomeChange",
         "type": "uint256"
@@ -147,6 +172,31 @@
       }
     ],
     "name": "BulkBuyLimitChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "consumer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "ConsumerChanged",
     "type": "event"
   },
   {
@@ -288,6 +338,25 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "gene",
+        "type": "uint256"
+      }
+    ],
+    "name": "TokenBurnedAndMinted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "newGene",
         "type": "uint256"
       }
@@ -368,19 +437,6 @@
       }
     ],
     "name": "Unpaused",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "arweaveAssetsJSON",
-        "type": "string"
-      }
-    ],
-    "name": "arweaveAssetsJSONChanged",
     "type": "event"
   },
   {
@@ -540,12 +596,62 @@
   {
     "inputs": [
       {
+        "internalType": "uint256[]",
+        "name": "tokenIds",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "burnAndMintNewPolymorph",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "burnCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "newGenomeChangePrice",
         "type": "uint256"
       }
     ],
     "name": "changeBaseGenomeChangePrice",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_consumer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "changeConsumer",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -561,6 +667,25 @@
     "name": "changeRandomizeGenomePrice",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "consumerOf",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -589,6 +714,25 @@
       {
         "internalType": "uint256",
         "name": "gene",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "genomeChanges",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "genomeChnages",
         "type": "uint256"
       }
     ],
@@ -743,6 +887,25 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "isNotVirgin",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "lastTokenId",
     "outputs": [
@@ -785,7 +948,7 @@
     ],
     "name": "mint",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -866,6 +1029,19 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "polymorphV1Contract",
+    "outputs": [
+      {
+        "internalType": "contract Polymorph",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -1219,6 +1395,71 @@
   {
     "inputs": [],
     "name": "unpause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "bridgeAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
+      }
+    ],
+    "name": "whitelistBridgeAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "whitelistTunnelAddresses",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "gene",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isVirgin",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "genomeChangesCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "wormholeUpdateGene",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

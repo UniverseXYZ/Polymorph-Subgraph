@@ -231,6 +231,64 @@ export class MintedEntity extends Entity {
   }
 }
 
+export class BurnedEntity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save BurnedEntity entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save BurnedEntity entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("BurnedEntity", id.toString(), this);
+  }
+
+  static load(id: string): BurnedEntity | null {
+    return store.get("BurnedEntity", id) as BurnedEntity | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get tokenId(): BigInt {
+    let value = this.get("tokenId");
+    return value.toBigInt();
+  }
+
+  set tokenId(value: BigInt) {
+    this.set("tokenId", Value.fromBigInt(value));
+  }
+
+  get tokenURI(): string {
+    let value = this.get("tokenURI");
+    return value.toString();
+  }
+
+  set tokenURI(value: string) {
+    this.set("tokenURI", Value.fromString(value));
+  }
+
+  get gene(): BigInt {
+    let value = this.get("gene");
+    return value.toBigInt();
+  }
+
+  set gene(value: BigInt) {
+    this.set("gene", Value.fromBigInt(value));
+  }
+}
+
 export class Trait extends Entity {
   constructor(id: string) {
     super();

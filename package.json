@@ -4,7 +4,7 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ universexyz/polymorph-v1-mainnet --access-token db6f61aad5e9404e9f4a15625bf91330",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ universexyz/polymorph-v2-rinkeby --access-token db6f61aad5e9404e9f4a15625bf91330",
     "create-local": "graph create --node http://localhost:8020/ universexyz/polymorph-v1-mainnet",
     "remove-local": "graph remove --node http://localhost:8020/ universexyz/polymorph-v1-mainnet",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 universexyz/polymorph-v1-mainnet"

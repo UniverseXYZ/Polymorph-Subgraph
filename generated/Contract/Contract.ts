@@ -62,6 +62,24 @@ export class ApprovalForAll__Params {
   }
 }
 
+export class ArweaveAssetsJSONChanged extends ethereum.Event {
+  get params(): ArweaveAssetsJSONChanged__Params {
+    return new ArweaveAssetsJSONChanged__Params(this);
+  }
+}
+
+export class ArweaveAssetsJSONChanged__Params {
+  _event: ArweaveAssetsJSONChanged;
+
+  constructor(event: ArweaveAssetsJSONChanged) {
+    this._event = event;
+  }
+
+  get arweaveAssetsJSON(): string {
+    return this._event.parameters[0].value.toString();
+  }
+}
+
 export class BaseGenomeChangePriceChanged extends ethereum.Event {
   get params(): BaseGenomeChangePriceChanged__Params {
     return new BaseGenomeChangePriceChanged__Params(this);
@@ -113,6 +131,32 @@ export class BulkBuyLimitChanged__Params {
 
   get newBulkBuyLimit(): BigInt {
     return this._event.parameters[0].value.toBigInt();
+  }
+}
+
+export class ConsumerChanged extends ethereum.Event {
+  get params(): ConsumerChanged__Params {
+    return new ConsumerChanged__Params(this);
+  }
+}
+
+export class ConsumerChanged__Params {
+  _event: ConsumerChanged;
+
+  constructor(event: ConsumerChanged) {
+    this._event = event;
+  }
+
+  get owner(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get consumer(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -266,6 +310,28 @@ export class RoleRevoked__Params {
   }
 }
 
+export class TokenBurnedAndMinted extends ethereum.Event {
+  get params(): TokenBurnedAndMinted__Params {
+    return new TokenBurnedAndMinted__Params(this);
+  }
+}
+
+export class TokenBurnedAndMinted__Params {
+  _event: TokenBurnedAndMinted;
+
+  constructor(event: TokenBurnedAndMinted) {
+    this._event = event;
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get gene(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
 export class TokenMinted extends ethereum.Event {
   get params(): TokenMinted__Params {
     return new TokenMinted__Params(this);
@@ -363,24 +429,6 @@ export class Unpaused__Params {
 
   get account(): Address {
     return this._event.parameters[0].value.toAddress();
-  }
-}
-
-export class arweaveAssetsJSONChanged extends ethereum.Event {
-  get params(): arweaveAssetsJSONChanged__Params {
-    return new arweaveAssetsJSONChanged__Params(this);
-  }
-}
-
-export class arweaveAssetsJSONChanged__Params {
-  _event: arweaveAssetsJSONChanged;
-
-  constructor(event: arweaveAssetsJSONChanged) {
-    this._event = event;
-  }
-
-  get arweaveAssetsJSON(): string {
-    return this._event.parameters[0].value.toString();
   }
 }
 
@@ -537,6 +585,44 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  burnCount(param0: Address): BigInt {
+    let result = super.call("burnCount", "burnCount(address):(uint256)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_burnCount(param0: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("burnCount", "burnCount(address):(uint256)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  consumerOf(_tokenId: BigInt): Address {
+    let result = super.call("consumerOf", "consumerOf(uint256):(address)", [
+      ethereum.Value.fromUnsignedBigInt(_tokenId)
+    ]);
+
+    return result[0].toAddress();
+  }
+
+  try_consumerOf(_tokenId: BigInt): ethereum.CallResult<Address> {
+    let result = super.tryCall("consumerOf", "consumerOf(uint256):(address)", [
+      ethereum.Value.fromUnsignedBigInt(_tokenId)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   daoAddress(): Address {
     let result = super.call("daoAddress", "daoAddress():(address)", []);
 
@@ -564,6 +650,29 @@ export class Contract extends ethereum.SmartContract {
     let result = super.tryCall("geneOf", "geneOf(uint256):(uint256)", [
       ethereum.Value.fromUnsignedBigInt(tokenId)
     ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  genomeChanges(tokenId: BigInt): BigInt {
+    let result = super.call(
+      "genomeChanges",
+      "genomeChanges(uint256):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_genomeChanges(tokenId: BigInt): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "genomeChanges",
+      "genomeChanges(uint256):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -712,6 +821,25 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
+  isNotVirgin(param0: BigInt): boolean {
+    let result = super.call("isNotVirgin", "isNotVirgin(uint256):(bool)", [
+      ethereum.Value.fromUnsignedBigInt(param0)
+    ]);
+
+    return result[0].toBoolean();
+  }
+
+  try_isNotVirgin(param0: BigInt): ethereum.CallResult<boolean> {
+    let result = super.tryCall("isNotVirgin", "isNotVirgin(uint256):(bool)", [
+      ethereum.Value.fromUnsignedBigInt(param0)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
   lastTokenId(): BigInt {
     let result = super.call("lastTokenId", "lastTokenId():(uint256)", []);
 
@@ -808,6 +936,29 @@ export class Contract extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  polymorphV1Contract(): Address {
+    let result = super.call(
+      "polymorphV1Contract",
+      "polymorphV1Contract():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_polymorphV1Contract(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "polymorphV1Contract",
+      "polymorphV1Contract():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   priceForGenomeChange(tokenId: BigInt): BigInt {
@@ -980,6 +1131,29 @@ export class Contract extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
+
+  whitelistTunnelAddresses(param0: Address): boolean {
+    let result = super.call(
+      "whitelistTunnelAddresses",
+      "whitelistTunnelAddresses(address):(bool)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_whitelistTunnelAddresses(param0: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "whitelistTunnelAddresses",
+      "whitelistTunnelAddresses(address):(bool)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
 }
 
 export class ConstructorCall extends ethereum.Call {
@@ -999,48 +1173,8 @@ export class ConstructorCall__Inputs {
     this._call = call;
   }
 
-  get name(): string {
-    return this._call.inputValues[0].value.toString();
-  }
-
-  get symbol(): string {
-    return this._call.inputValues[1].value.toString();
-  }
-
-  get baseURI(): string {
-    return this._call.inputValues[2].value.toString();
-  }
-
-  get _daoAddress(): Address {
-    return this._call.inputValues[3].value.toAddress();
-  }
-
-  get premintedTokensCount(): BigInt {
-    return this._call.inputValues[4].value.toBigInt();
-  }
-
-  get _baseGenomeChangePrice(): BigInt {
-    return this._call.inputValues[5].value.toBigInt();
-  }
-
-  get _polymorphPrice(): BigInt {
-    return this._call.inputValues[6].value.toBigInt();
-  }
-
-  get totalSupply(): BigInt {
-    return this._call.inputValues[7].value.toBigInt();
-  }
-
-  get _randomizeGenomePrice(): BigInt {
-    return this._call.inputValues[8].value.toBigInt();
-  }
-
-  get _bulkBuyLimit(): BigInt {
-    return this._call.inputValues[9].value.toBigInt();
-  }
-
-  get _arweaveAssetsJSON(): string {
-    return this._call.inputValues[10].value.toString();
+  get params(): ConstructorCallParamsStruct {
+    return this._call.inputValues[0].value.toTuple() as ConstructorCallParamsStruct;
   }
 }
 
@@ -1049,6 +1183,56 @@ export class ConstructorCall__Outputs {
 
   constructor(call: ConstructorCall) {
     this._call = call;
+  }
+}
+
+export class ConstructorCallParamsStruct extends ethereum.Tuple {
+  get name(): string {
+    return this[0].toString();
+  }
+
+  get symbol(): string {
+    return this[1].toString();
+  }
+
+  get baseURI(): string {
+    return this[2].toString();
+  }
+
+  get _daoAddress(): Address {
+    return this[3].toAddress();
+  }
+
+  get premintedTokensCount(): BigInt {
+    return this[4].toBigInt();
+  }
+
+  get _baseGenomeChangePrice(): BigInt {
+    return this[5].toBigInt();
+  }
+
+  get _polymorphPrice(): BigInt {
+    return this[6].toBigInt();
+  }
+
+  get _maxSupply(): BigInt {
+    return this[7].toBigInt();
+  }
+
+  get _randomizeGenomePrice(): BigInt {
+    return this[8].toBigInt();
+  }
+
+  get _bulkBuyLimit(): BigInt {
+    return this[9].toBigInt();
+  }
+
+  get _arweaveAssetsJSON(): string {
+    return this[10].toString();
+  }
+
+  get _polymorphV1Address(): Address {
+    return this[11].toAddress();
   }
 }
 
@@ -1146,6 +1330,36 @@ export class BurnCall__Outputs {
   }
 }
 
+export class BurnAndMintNewPolymorphCall extends ethereum.Call {
+  get inputs(): BurnAndMintNewPolymorphCall__Inputs {
+    return new BurnAndMintNewPolymorphCall__Inputs(this);
+  }
+
+  get outputs(): BurnAndMintNewPolymorphCall__Outputs {
+    return new BurnAndMintNewPolymorphCall__Outputs(this);
+  }
+}
+
+export class BurnAndMintNewPolymorphCall__Inputs {
+  _call: BurnAndMintNewPolymorphCall;
+
+  constructor(call: BurnAndMintNewPolymorphCall) {
+    this._call = call;
+  }
+
+  get tokenIds(): Array<BigInt> {
+    return this._call.inputValues[0].value.toBigIntArray();
+  }
+}
+
+export class BurnAndMintNewPolymorphCall__Outputs {
+  _call: BurnAndMintNewPolymorphCall;
+
+  constructor(call: BurnAndMintNewPolymorphCall) {
+    this._call = call;
+  }
+}
+
 export class ChangeBaseGenomeChangePriceCall extends ethereum.Call {
   get inputs(): ChangeBaseGenomeChangePriceCall__Inputs {
     return new ChangeBaseGenomeChangePriceCall__Inputs(this);
@@ -1172,6 +1386,40 @@ export class ChangeBaseGenomeChangePriceCall__Outputs {
   _call: ChangeBaseGenomeChangePriceCall;
 
   constructor(call: ChangeBaseGenomeChangePriceCall) {
+    this._call = call;
+  }
+}
+
+export class ChangeConsumerCall extends ethereum.Call {
+  get inputs(): ChangeConsumerCall__Inputs {
+    return new ChangeConsumerCall__Inputs(this);
+  }
+
+  get outputs(): ChangeConsumerCall__Outputs {
+    return new ChangeConsumerCall__Outputs(this);
+  }
+}
+
+export class ChangeConsumerCall__Inputs {
+  _call: ChangeConsumerCall;
+
+  constructor(call: ChangeConsumerCall) {
+    this._call = call;
+  }
+
+  get _consumer(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _tokenId(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class ChangeConsumerCall__Outputs {
+  _call: ChangeConsumerCall;
+
+  constructor(call: ChangeConsumerCall) {
     this._call = call;
   }
 }
@@ -1262,36 +1510,6 @@ export class MintCall__Outputs {
   _call: MintCall;
 
   constructor(call: MintCall) {
-    this._call = call;
-  }
-}
-
-export class Mint1Call extends ethereum.Call {
-  get inputs(): Mint1Call__Inputs {
-    return new Mint1Call__Inputs(this);
-  }
-
-  get outputs(): Mint1Call__Outputs {
-    return new Mint1Call__Outputs(this);
-  }
-}
-
-export class Mint1Call__Inputs {
-  _call: Mint1Call;
-
-  constructor(call: Mint1Call) {
-    this._call = call;
-  }
-
-  get to(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class Mint1Call__Outputs {
-  _call: Mint1Call;
-
-  constructor(call: Mint1Call) {
     this._call = call;
   }
 }
@@ -1778,6 +1996,82 @@ export class UnpauseCall__Outputs {
   _call: UnpauseCall;
 
   constructor(call: UnpauseCall) {
+    this._call = call;
+  }
+}
+
+export class WhitelistBridgeAddressCall extends ethereum.Call {
+  get inputs(): WhitelistBridgeAddressCall__Inputs {
+    return new WhitelistBridgeAddressCall__Inputs(this);
+  }
+
+  get outputs(): WhitelistBridgeAddressCall__Outputs {
+    return new WhitelistBridgeAddressCall__Outputs(this);
+  }
+}
+
+export class WhitelistBridgeAddressCall__Inputs {
+  _call: WhitelistBridgeAddressCall;
+
+  constructor(call: WhitelistBridgeAddressCall) {
+    this._call = call;
+  }
+
+  get bridgeAddress(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get status(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class WhitelistBridgeAddressCall__Outputs {
+  _call: WhitelistBridgeAddressCall;
+
+  constructor(call: WhitelistBridgeAddressCall) {
+    this._call = call;
+  }
+}
+
+export class WormholeUpdateGeneCall extends ethereum.Call {
+  get inputs(): WormholeUpdateGeneCall__Inputs {
+    return new WormholeUpdateGeneCall__Inputs(this);
+  }
+
+  get outputs(): WormholeUpdateGeneCall__Outputs {
+    return new WormholeUpdateGeneCall__Outputs(this);
+  }
+}
+
+export class WormholeUpdateGeneCall__Inputs {
+  _call: WormholeUpdateGeneCall;
+
+  constructor(call: WormholeUpdateGeneCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get gene(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get isVirgin(): boolean {
+    return this._call.inputValues[2].value.toBoolean();
+  }
+
+  get genomeChangesCount(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+}
+
+export class WormholeUpdateGeneCall__Outputs {
+  _call: WormholeUpdateGeneCall;
+
+  constructor(call: WormholeUpdateGeneCall) {
     this._call = call;
   }
 }
