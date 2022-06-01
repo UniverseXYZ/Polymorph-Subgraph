@@ -36,3 +36,8 @@ type Trait @entity {
   count: BigInt
   rarity: BigDecimal
 }
+
+type BurnCount @entity {
+  id: ID!
+  count: BigInt
+}

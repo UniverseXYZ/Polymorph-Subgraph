@@ -353,3 +353,51 @@ export class Trait extends Entity {
     }
   }
 }
+
+export class BurnCount extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save BurnCount entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save BurnCount entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("BurnCount", id.toString(), this);
+  }
+
+  static load(id: string): BurnCount | null {
+    return store.get("BurnCount", id) as BurnCount | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get count(): BigInt | null {
+    let value = this.get("count");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set count(value: BigInt | null) {
+    if (value === null) {
+      this.unset("count");
+    } else {
+      this.set("count", Value.fromBigInt(value as BigInt));
+    }
+  }
+}

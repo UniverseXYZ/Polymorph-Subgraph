@@ -15,7 +15,7 @@ import {
   TokenMinted,
   TokenBurnedAndMinted
 } from "../generated/Contract/Contract"
-import { TokenMorphedEntity, TransferEntity, Trait, BurnedEntity } from "../generated/schema"
+import { TokenMorphedEntity, TransferEntity, Trait, BurnedEntity, BurnCount } from "../generated/schema"
 
 function parseGeneToTraits(gene: string, method: string): void {
   // CHARACTER MAP
@@ -445,6 +445,15 @@ export function handleTokenBurnedAndMinted(event: TokenBurnedAndMinted): void {
   }
 
   burn.save();
+
+  let burnCount = BurnCount.load("1");
+
+  if (burnCount == null) {
+    burnCount = new BurnCount("1");
+  }
+  
+  burnCount.count = burnCount.count.plus(BigInt.fromI32(1));
+  burnCount.save();
 }
 
 export function handleUnpaused(event: Unpaused): void {}
