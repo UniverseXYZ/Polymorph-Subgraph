@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Contract
-    network: mainnet
+    network: rinkeby
     source:
-      address: "0xb5433e67C067Cad4cb36529f3f2D61ec0fb59F89"
+      address: "0x853dcA23B9CE346A25e63774a46308384798B931"
       abi: Contract
-      startBlock: 14947623
+      startBlock: 10930653
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -27,7 +27,6 @@ dataSources:
         - Transfer
         - Unpaused
         - Trait
-        - BurnedEntity
       abis:
         - name: Contract
           file: ./abis/Contract.json
@@ -56,6 +55,4 @@ dataSources:
           handler: handleTransfer
         - event: Unpaused(address)
           handler: handleUnpaused
-        - event: TokenBurnedAndMinted(indexed uint256,uint256)
-          handler: handleTokenBurnedAndMinted
       file: ./src/mapping.ts

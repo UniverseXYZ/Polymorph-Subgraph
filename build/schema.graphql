@@ -24,20 +24,8 @@ type MintedEntity @entity {
   tokenURI: String!
 }
 
-type BurnedEntity @entity {
-  id: ID!
-  tokenId: BigInt!
-  tokenURI: String!
-  gene: BigInt!
-}
-
 type Trait @entity {
   id: ID!
   count: BigInt
   rarity: BigDecimal
-}
-
-type BurnCount @entity {
-  id: ID!
-  count: BigInt
 }
