@@ -14,7 +14,7 @@ import {
   Unpaused,
   TokenMinted,
 } from "../generated/Contract/Contract"
-import { TokenMorphedEntity, TransferEntity, Trait } from "../generated/schema"
+import { TokenMorphedEntity, TransferEntity, Trait, MintedEntity } from "../generated/schema"
 
 function parseGeneToTraits(gene: string, method: string): void {
   // CHARACTER MAP
@@ -424,6 +424,19 @@ export function handleTransfer(event: Transfer): void {
   }
 
   transfer.save();
+  
+  if (
+    event.params.from.equals(
+      ByteArray.fromHexString("0x0000000000000000000000000000000000000000")
+    )
+  ) {
+    let id = event.params.tokenId.toString();
+    let mintEntity = new MintedEntity(id);
+    mintEntity.tokenId = event.params.tokenId;
+    mintEntity.to = event.params.to;
+    mintEntity.save();
+  }
+
 }
 
 export function handleUnpaused(event: Unpaused): void {}
