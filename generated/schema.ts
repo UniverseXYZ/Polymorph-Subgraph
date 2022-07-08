@@ -220,15 +220,6 @@ export class MintedEntity extends Entity {
   set tokenId(value: BigInt) {
     this.set("tokenId", Value.fromBigInt(value));
   }
-
-  get tokenURI(): string {
-    let value = this.get("tokenURI");
-    return value.toString();
-  }
-
-  set tokenURI(value: string) {
-    this.set("tokenURI", Value.fromString(value));
-  }
 }
 
 export class Trait extends Entity {
