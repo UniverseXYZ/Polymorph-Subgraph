@@ -21,7 +21,6 @@ type MintedEntity @entity {
   id: ID!
   to: Bytes!
   tokenId: BigInt!
-  tokenURI: String!
 }
 
 type BurnedEntity @entity {
